@@ -1,0 +1,31 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "wesbos",
+    "plugin:vue/essential"
+  ],
+  "rules": {
+    "import/no-unresolved": [
+      0,
+      {
+        "caseSensitive": false
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 100,
+        "tabWidth": 2,
+        "semi": true
+      }
+    ]
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  }
+}
