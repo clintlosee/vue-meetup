@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-one-third">
+  <router-link :to="`/meetups/${meetup._id}`" class="column is-one-third">
     <div class="card large">
       <div class="card-image">
         <figure class="image is-4by3">
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
