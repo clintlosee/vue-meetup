@@ -14,14 +14,14 @@
             <figure class="media-left">
               <p class="image is-64x64">
                 <!-- OPTIONAL: meetupCreator avatar -->
-                <img class="is-rounded" :src="meetupCreator.avatar" v-if="meetupCreator" />
+                <img class="is-rounded" :src="meetupCreator.avatar" />
               </p>
             </figure>
             <div class="media-content">
               <div class="content">
                 <p>
                   <!-- OPTIONAL: meetupCreator name -->
-                  Created by <strong v-if="meetupCreator">{{ meetupCreator.name }}</strong>
+                  Created by <strong>{{ meetupCreator.name }}</strong>
                 </p>
               </div>
             </div>
@@ -68,20 +68,16 @@
                 Threads
               </p>
               <ul>
-                <li>Should I follow some dresscode ?</li>
+                <li v-for="thread in threads" :key="thread._id">{{ thread.title }}</li>
               </ul>
               <p class="menu-label">
                 Who is Going
               </p>
               <div class="columns is-multiline is-mobile">
                 <!-- Joined People Images Here -->
-                <div class="column is-3">
+                <div v-for="person in meetup.joinedPeople" :key="person._id" class="column is-3">
                   <figure class="image is-64x64">
-                    <img
-                      class="is-rounded"
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuqyc3j2s3bL4DIkC8uC9h0rcAdsDXcwJPNh8XHWbLQfHbOpVU"
-                      alt="Image"
-                    />
+                    <img class="is-rounded" :src="person.avatar" alt="Image" />
                   </figure>
                 </div>
               </div>
@@ -91,7 +87,6 @@
           <div class="column is-7 is-offset-1">
             <div class="content is-medium">
               <h3 class="title is-3">About the Meetup</h3>
-              <!-- TODO: meetup description -->
               <p>
                 {{ meetup.description }}
               </p>
@@ -104,9 +99,9 @@
             <!-- Thread List START -->
             <div class="content is-medium">
               <h3 class="title is-3">Threads</h3>
-              <div class="box">
+              <div v-for="thread in threads" :key="thread._id" class="box">
                 <!-- Thread title -->
-                <h4 id="const" class="title is-3">Should I follow some dresscode ?</h4>
+                <h4 id="const" class="title is-3">{{ thread.title }}</h4>
                 <!-- Create new post, handle later -->
                 <form class="post-create">
                   <div class="field">
@@ -120,25 +115,22 @@
                 </form>
                 <!-- Create new post END, handle later -->
                 <!-- Posts START -->
-                <article class="media post-item">
+                <article v-for="post in thread.posts" :key="post._id" class="media post-item">
                   <figure class="media-left is-rounded user-image">
                     <p class="image is-32x32">
-                      <img
-                        class="is-rounded"
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuqyc3j2s3bL4DIkC8uC9h0rcAdsDXcwJPNh8XHWbLQfHbOpVU"
-                      />
+                      <img class="is-rounded" :src="post.user.avatar" />
                     </p>
                   </figure>
                   <div class="media-content">
                     <div class="content is-medium">
                       <div class="post-content">
                         <!-- Post User Name -->
-                        <strong class="author">Filip Jerga</strong>
+                        <strong class="author">{{ post.user.name }}</strong>
                         {{ ' ' }}
                         <!-- Post Updated at -->
-                        <small class="post-time">13th Jan</small>
+                        <small class="post-time">{{ post.updatedAt | formatDate('LLL') }}</small>
                         <br />
-                        <p class="post-content-message">It's up to you (:</p>
+                        <p class="post-content-message">{{ post.text }}</p>
                       </div>
                     </div>
                   </div>
@@ -162,20 +154,24 @@ export default {
   data() {
     return {
       meetup: {},
+      threads: [],
     };
   },
 
   created() {
     const meetupId = this.$route.params.id;
     axios.get(`/api/v1/meetups/${meetupId}`).then(res => {
-      console.log(res.data);
       this.meetup = res.data;
+    });
+
+    axios.get(`/api/v1/threads?meetupId=${meetupId}`).then(res => {
+      this.threads = res.data;
     });
   },
 
   computed: {
     meetupCreator() {
-      return this.meetup.meetupCreator;
+      return this.meetup.meetupCreator || '';
     },
   },
 };
