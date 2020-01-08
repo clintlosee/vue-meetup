@@ -147,31 +147,29 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   name: 'PageMeetupDetail',
   data() {
-    return {
-      meetup: {},
-      threads: [],
-    };
+    return {};
   },
 
   created() {
     const meetupId = this.$route.params.id;
-    axios.get(`/api/v1/meetups/${meetupId}`).then(res => {
-      this.meetup = res.data;
-    });
-
-    axios.get(`/api/v1/threads?meetupId=${meetupId}`).then(res => {
-      this.threads = res.data;
-    });
+    this.$store.dispatch('fetchMeetupById', meetupId);
+    this.$store.dispatch('fetchThreads', meetupId);
   },
 
   computed: {
+    meetup() {
+      return this.$store.state.meetup;
+    },
+
+    threads() {
+      return this.$store.state.threads;
+    },
+
     meetupCreator() {
-      return this.meetup.meetupCreator || '';
+      return this.meetup.meetupCreator || {};
     },
   },
 };
