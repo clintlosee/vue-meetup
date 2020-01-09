@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 export default {
   name: 'PageMeetupFind',
   data() {
@@ -75,13 +77,17 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('fetchMeetups');
+    this.fetchMeetups();
   },
 
   computed: {
-    meetups() {
-      return this.$store.state.meetups;
-    },
+    ...mapState({
+      meetups: state => state.meetups.items,
+    }),
+  },
+
+  methods: {
+    ...mapActions('meetups', ['fetchMeetups']),
   },
 };
 </script>

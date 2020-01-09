@@ -7,20 +7,17 @@
             {{ meetup.startDate | formatDate }}
           </h2>
           <h1 class="title">
-            <!-- TODO: title -->
             {{ meetup.title }}
           </h1>
           <article class="media v-center">
             <figure class="media-left">
               <p class="image is-64x64">
-                <!-- OPTIONAL: meetupCreator avatar -->
                 <img class="is-rounded" :src="meetupCreator.avatar" />
               </p>
             </figure>
             <div class="media-content">
               <div class="content">
                 <p>
-                  <!-- OPTIONAL: meetupCreator name -->
                   Created by <strong>{{ meetupCreator.name }}</strong>
                 </p>
               </div>
@@ -163,8 +160,8 @@ export default {
 
   computed: {
     ...mapState({
-      meetup: state => state.meetup,
-      threads: state => state.threads,
+      meetup: state => state.meetups.item,
+      threads: state => state.threads.items,
     }),
 
     meetupCreator() {
@@ -173,7 +170,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchMeetupById', 'fetchThreads']),
+    ...mapActions('meetups', ['fetchMeetupById']),
+    ...mapActions('threads', ['fetchThreads']),
   },
 };
 </script>
