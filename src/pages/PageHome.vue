@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import CategoryItem from '@/components/CategoryItem';
 import MeetupItem from '@/components/MeetupItem';
 
@@ -45,18 +46,19 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('fetchMeetups');
-    this.$store.dispatch('fetchCategories');
+    this.fetchMeetups();
+    this.fetchCategories();
   },
 
   computed: {
-    meetups() {
-      return this.$store.state.meetups;
-    },
+    ...mapState({
+      meetups: state => state.meetups,
+      categories: state => state.categories,
+    }),
+  },
 
-    categories() {
-      return this.$store.state.categories;
-    },
+  methods: {
+    ...mapActions(['fetchMeetups', 'fetchCategories']),
   },
 };
 </script>
