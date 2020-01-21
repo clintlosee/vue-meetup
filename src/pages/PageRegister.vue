@@ -9,30 +9,52 @@
             <figure class="avatar">
               <img src="https://placehold.it/128x128" />
             </figure>
-            <form>
+            <form @submit.prevent="register">
               <div class="field">
                 <div class="control">
-                  <input class="input is-large" type="text" placeholder="Username" />
-                </div>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <input class="input is-large" type="text" placeholder="Name" />
-                </div>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <input class="input is-large" type="email" placeholder="Your Email" />
-                </div>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <input class="input is-large" type="text" placeholder="Avatar" autocomplete="" />
+                  <input
+                    v-model="form.username"
+                    class="input is-large"
+                    type="text"
+                    placeholder="Username"
+                  />
                 </div>
               </div>
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="form.name"
+                    class="input is-large"
+                    type="text"
+                    placeholder="Name"
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input
+                    v-model="form.email"
+                    class="input is-large"
+                    type="email"
+                    placeholder="Your Email"
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input
+                    v-model="form.avatar"
+                    class="input is-large"
+                    type="text"
+                    placeholder="Avatar"
+                    autocomplete=""
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input
+                    v-model="form.password"
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
@@ -43,6 +65,7 @@
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="form.passwordConfirmation"
                     class="input is-large"
                     type="password"
                     placeholder="Password Confirmation"
@@ -69,6 +92,24 @@
 <script>
 export default {
   name: 'PageRegister',
+  data() {
+    return {
+      form: {
+        username: null,
+        name: null,
+        email: null,
+        avatar: null,
+        password: null,
+        passwordConfirmation: null,
+      },
+    };
+  },
+
+  methods: {
+    register() {
+      this.$store.dispatch('auth/registerUser', this.form);
+    },
+  },
 };
 </script>
 

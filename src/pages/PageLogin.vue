@@ -9,10 +9,11 @@
             <figure class="avatar">
               <img src="https://placehold.it/128x128" />
             </figure>
-            <form>
+            <form @submit.prevent="login">
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="form.email"
                     class="input is-large"
                     type="email"
                     placeholder="Your Email"
@@ -24,6 +25,7 @@
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="form.password"
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
@@ -48,6 +50,20 @@
 <script>
 export default {
   name: 'PageLogin',
+  data() {
+    return {
+      form: {
+        email: null,
+        password: null,
+      },
+    };
+  },
+
+  methods: {
+    login() {
+      this.$store.dispatch('auth/loginWithEmailAndPassword', this.form);
+    },
+  },
 };
 </script>
 
