@@ -14,26 +14,46 @@
                 <div class="control">
                   <input
                     v-model="form.email"
+                    @blur="$v.form.email.$touch()"
                     class="input is-large"
                     type="email"
                     placeholder="Your Email"
                     autofocus=""
                     autocomplete="email"
                   />
+                  <div v-if="$v.form.email.$error" class="form-error">
+                    <span v-if="!$v.form.email.required" class="help is-danger">
+                      Email is required
+                    </span>
+                    <span v-if="!$v.form.email.email" class="help is-danger">
+                      Email address is not valid
+                    </span>
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
                   <input
                     v-model="form.password"
+                    @blur="$v.form.password.$touch()"
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
                     autocomplete="current-password"
                   />
+                  <div v-if="$v.form.password.$error" class="form-error">
+                    <span v-if="!$v.form.password.required" class="help is-danger">
+                      Password is required
+                    </span>
+                  </div>
                 </div>
               </div>
-              <button class="button is-block is-info is-large is-fullwidth">Login</button>
+              <button
+                :disabled="isFormInvalid"
+                class="button is-block is-info is-large is-fullwidth"
+              >
+                Login
+              </button>
             </form>
           </div>
           <p class="has-text-grey">
@@ -48,6 +68,8 @@
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators';
+
 export default {
   name: 'PageLogin',
   data() {
@@ -59,8 +81,27 @@ export default {
     };
   },
 
+  validations: {
+    form: {
+      email: {
+        required,
+        email,
+      },
+      password: {
+        required,
+      },
+    },
+  },
+
+  computed: {
+    isFormInvalid() {
+      return this.$v.form.$invalid;
+    },
+  },
+
   methods: {
     login() {
+      this.$v.$touch();
       this.$store.dispatch('auth/loginWithEmailAndPassword', this.form);
     },
   },
