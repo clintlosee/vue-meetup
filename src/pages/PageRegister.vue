@@ -199,7 +199,12 @@ export default {
   methods: {
     register() {
       this.$v.$touch();
-      this.$store.dispatch('auth/registerUser', this.form);
+      this.$store
+        .dispatch('auth/registerUser', this.form)
+        .then(() => {
+          this.$router.push('/login');
+        })
+        .catch(err => console.log(err));
     },
   },
 };

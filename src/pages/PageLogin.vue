@@ -102,7 +102,12 @@ export default {
   methods: {
     login() {
       this.$v.$touch();
-      this.$store.dispatch('auth/loginWithEmailAndPassword', this.form);
+      this.$store
+        .dispatch('auth/loginWithEmailAndPassword', this.form)
+        .then(() => {
+          this.$router.push('/');
+        })
+        .catch(err => console.log(err));
     },
   },
 };
