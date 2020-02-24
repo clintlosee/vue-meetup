@@ -17,7 +17,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbarBasicExample" class="navbar-menu is-active">
       <div class="navbar-start">
         <router-link :to="`/`" class="navbar-item">
           Home
@@ -63,7 +63,7 @@
               Profile
             </a>
             <hr class="navbar-divider" />
-            <a class="navbar-item">
+            <a @click.prevent="logout" class="navbar-item">
               Logout
             </a>
           </div>
@@ -92,6 +92,12 @@ export default {
     ...mapGetters({
       user: 'auth/authUser',
     }),
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout');
+    },
   },
 };
 </script>
