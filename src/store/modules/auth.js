@@ -5,6 +5,7 @@ export default {
 
   state: {
     user: null,
+    isAuthResolved: false,
   },
 
   getters: {
@@ -39,16 +40,23 @@ export default {
         .catch(err => err);
     },
 
-    getAuthUser({ commit }) {
+    getAuthUser({ commit, getters }) {
+      const { authUser } = getters;
+      if (authUser) {
+        return Promise.resolve(authUser);
+      }
+
       return axios
         .get('/api/v1/users/me')
         .then(res => {
           const user = res.data;
           commit('setAuthUser', user);
+          commit('setAuthState', true);
           return user;
         })
         .catch(err => {
           commit('setAuthUser', null);
+          commit('setAuthState', true);
           return err;
         });
     },
@@ -57,6 +65,10 @@ export default {
   mutations: {
     setAuthUser(state, user) {
       return (state.user = user);
+    },
+
+    setAuthState(state, authState) {
+      return (state.isAuthResolved = authState);
     },
   },
 };
