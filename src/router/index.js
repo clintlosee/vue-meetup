@@ -42,11 +42,17 @@ const router = new Router({
       path: '/login',
       name: 'PageLogin',
       component: PageLogin,
+      meta: {
+        onlyGuestUser: true,
+      },
     },
     {
       path: '/register',
       name: 'PageRegister',
       component: PageRegister,
+      meta: {
+        onlyGuestUser: true,
+      },
     },
     {
       path: '/401',
@@ -63,12 +69,19 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  store.dispatch('auth/getAuthUser').then(authUser => {
+  store.dispatch('auth/getAuthUser').then(() => {
+    const isAuthenticated = store.getters['auth/isAuthenticated'];
     if (to.meta.onlyAuthUser) {
-      if (store.getters['auth/isAuthenticated']) {
+      if (isAuthenticated) {
         next();
       } else {
         next({ name: 'PageNotAuthenticated' });
+      }
+    } else if (to.meta.onlyGuestUser) {
+      if (isAuthenticated) {
+        next({ name: 'PageHome' });
+      } else {
+        next();
       }
     } else {
       next();

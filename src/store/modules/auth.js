@@ -46,8 +46,14 @@ export default {
         return Promise.resolve(authUser);
       }
 
+      const config = {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      };
+
       return axios
-        .get('/api/v1/users/me')
+        .get('/api/v1/users/me', config)
         .then(res => {
           const user = res.data;
           commit('setAuthUser', user);
