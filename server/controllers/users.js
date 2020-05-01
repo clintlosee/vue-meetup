@@ -18,7 +18,9 @@ exports.getCurrentUser = function(req, res, next) {
     return res.sendStatus(422);
   }
 
-  return res.json(user);
+  //* For session auth
+  // return res.json(user);
+  return res.json(user.toAuthJSON());
 };
 
 exports.register = function(req, res) {
@@ -27,7 +29,8 @@ exports.register = function(req, res) {
   if (!registerData.email) {
     return res.status(422).json({
       errors: {
-        email: 'is required',
+        email: 'Email is required',
+        message: 'Email is required',
       },
     });
   }
@@ -35,7 +38,8 @@ exports.register = function(req, res) {
   if (!registerData.password) {
     return res.status(422).json({
       errors: {
-        password: 'is required',
+        password: 'Password is required',
+        message: 'Password is required',
       },
     });
   }
@@ -43,7 +47,8 @@ exports.register = function(req, res) {
   if (registerData.password !== registerData.passwordConfirmation) {
     return res.status(422).json({
       errors: {
-        password: 'do not match',
+        password: 'Passwords do not match',
+        message: 'Passwords do not match',
       },
     });
   }
@@ -64,7 +69,8 @@ exports.login = function(req, res, next) {
   if (!email) {
     return res.status(422).json({
       errors: {
-        email: 'is required',
+        email: 'Email is required',
+        message: 'Email is required',
       },
     });
   }
@@ -72,7 +78,8 @@ exports.login = function(req, res, next) {
   if (!password) {
     return res.status(422).json({
       errors: {
-        password: 'is required',
+        password: 'Password is required',
+        message: 'Password is required',
       },
     });
   }
@@ -85,17 +92,20 @@ exports.login = function(req, res, next) {
     if (!user) {
       return res.status(422).send({
         errors: {
-          authentication: 'Ooops, something went wrong!',
+          message: 'Invalid password or email!',
         },
       });
     }
 
-    req.login(user, err => {
-      if (err) {
-        next(err);
-      }
-      return res.json(user);
-    });
+    return res.json(user.toAuthJSON());
+
+    //* Only for session auth!
+    // req.login(user, err => {
+    //   if (err) {
+    //     next(err);
+    //   }
+    //   return res.json(user);
+    // });
   })(req, res, next);
 };
 

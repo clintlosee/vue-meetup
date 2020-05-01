@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import moment from 'moment';
 import vuelidate from 'vuelidate';
+import Toasted from 'vue-toasted';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -16,6 +17,7 @@ Vue.component('AppDropdown', AppDropdown);
 Vue.component('AppSpinner', AppSpinner);
 
 Vue.use(vuelidate);
+Vue.use(Toasted);
 
 Vue.filter('capitalize', function(value) {
   if (value && typeof value === 'string') {

@@ -1,16 +1,20 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const JwtStrategy = require('passport-jwt').Strategy;
+const { ExtractJwt } = require('passport-jwt');
 const User = require('../models/users');
+const config = require('../config/dev');
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+//* only for session authentication
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
+// passport.deserializeUser((id, done) => {
+//   User.findById(id, (err, user) => {
+//     done(err, user);
+//   });
+// });
 
 passport.use(
   new LocalStrategy(
@@ -42,4 +46,23 @@ passport.use(
       });
     }
   )
+);
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.JWT_SECRET,
+};
+
+passport.use(
+  new JwtStrategy(jwtOptions, function(payload, done) {
+    User.findById(payload.id, function(err, user) {
+      if (err) return done(err, false);
+
+      if (user) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    });
+  })
 );
